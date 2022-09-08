@@ -1,21 +1,20 @@
 package com.jsdisco.soundscompose.presentation.chordsinfo
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.jsdisco.soundscompose.R
-import com.jsdisco.soundscompose.domain.models.FullChord
+import com.jsdisco.soundscompose.domain.models.ChordSearchResult
 import com.jsdisco.soundscompose.data.models.Note
 import com.jsdisco.soundscompose.presentation.chordsinfo.components.ChordResult
 import com.jsdisco.soundscompose.presentation.chordsinfo.components.Piano
@@ -25,13 +24,17 @@ import com.jsdisco.soundscompose.presentation.common.components.DropDownList
 fun ChordsInfoScreen(
     viewModel: ChordsInfoViewModel,
     navController: NavController,
-    onSetAppBarTitle: (String) -> Unit
+    onSetAppBarTitle: (String) -> Unit,
+    onSetShowBackBtn: (Boolean) -> Unit
 ) {
     viewModel.loadSounds(LocalContext.current)
 
+
+    val noteNames = stringArrayResource(id = R.array.notes_list).toList()
+    val chordNames = stringArrayResource(id = R.array.chords_list).toList()
     val roots = viewModel.roots
     val chords = viewModel.chords
-    val chordNames = chords.map { it.name.replace("sharp", "#") }
+
     val notesWhite = viewModel.notesWhite
     val notesBlack = viewModel.notesBlack
 
@@ -39,35 +42,39 @@ fun ChordsInfoScreen(
     var isOpenRoot by remember{mutableStateOf(false)}
     var isOpenChordName by remember{mutableStateOf(false)}
 
-    var selectedRoot by rememberSaveable{mutableStateOf("C")}
-    var selectedChordName by rememberSaveable{mutableStateOf("major")}
+    var selectedRoot by rememberSaveable{mutableStateOf(noteNames[0])}
+    var selectedChordName by rememberSaveable{mutableStateOf(chordNames[0])}
 
     fun handleRootDropDown(value: Boolean){ isOpenRoot = value }
     fun handleChordNameDropDown(value: Boolean){ isOpenChordName = value }
 
-    //var result by remember{mutableStateOf(viewModel.getChord(selectedRoot, selectedChordName))}
+
     val result = viewModel.result
-    fun selectRoot(root: String){
-        selectedRoot = root
-        //result = viewModel.getChord(selectedRoot, selectedChordName)
-        viewModel.getChord(selectedRoot, selectedChordName)
+    fun selectRoot(rootName: String){
+        selectedRoot = rootName
+        val rootIndex = noteNames.indexOf(selectedRoot)
+        val chordIndex = chordNames.indexOf(selectedChordName)
+        viewModel.getChord(roots[rootIndex], chords[chordIndex].name)
     }
     fun selectChordName(chordName: String){
         selectedChordName = chordName
-        //result = viewModel.getChord(selectedRoot, selectedChordName)
-        viewModel.getChord(selectedRoot, selectedChordName)
+        val rootIndex = noteNames.indexOf(selectedRoot)
+        val chordIndex = chordNames.indexOf(selectedChordName)
+        viewModel.getChord(roots[rootIndex], chords[chordIndex].name)
     }
 
     fun playChord(){
         viewModel.playSounds()
     }
 
+    val title = stringResource(id = R.string.title_chords_info)
     LaunchedEffect(Unit){
-        onSetAppBarTitle("Chords Info")
+        onSetAppBarTitle(title)
+        onSetShowBackBtn(false)
         viewModel.reset()
     }
     ChordsInfoScreenUI(
-        roots,
+        noteNames,
         chordNames,
         notesWhite,
         notesBlack,
@@ -86,7 +93,7 @@ fun ChordsInfoScreen(
 
 @Composable
 fun ChordsInfoScreenUI(
-    roots: List<String>,
+    noteNames: List<String>,
     chordNames: List<String>,
     notesWhite: List<Note>,
     notesBlack: List<Note>,
@@ -94,7 +101,7 @@ fun ChordsInfoScreenUI(
     isOpenChordName: Boolean,
     selectedRoot: String,
     selectedChordName: String,
-    resultChord: FullChord,
+    resultChord: ChordSearchResult,
     handleRootDropDown: (Boolean) -> Unit,
     handleChordNameDropDown: (Boolean) -> Unit,
     selectRoot: (String) -> Unit,
@@ -105,23 +112,16 @@ fun ChordsInfoScreenUI(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 10.dp)
-            .padding(top = 20.dp, bottom = 100.dp),
+            .padding(top = 10.dp, bottom = 65.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Select root note and chord name:",
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Column(modifier = Modifier.fillMaxWidth(0.5f)){
-                        DropDownList(isOpenRoot, roots, handleRootDropDown, selectRoot, selectedRoot)
+                        DropDownList(isOpenRoot, noteNames, handleRootDropDown, selectRoot, selectedRoot)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     Column(modifier = Modifier.fillMaxWidth(1f)){
@@ -130,7 +130,7 @@ fun ChordsInfoScreenUI(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(modifier = Modifier.fillMaxWidth()){
-                    ChordResult(fullChord = resultChord)
+                    ChordResult(chordSearchResult = resultChord)
                 }
             }
         }
@@ -142,7 +142,7 @@ fun ChordsInfoScreenUI(
                         contentDescription = "play sound",
                         modifier = Modifier
                             .size(30.dp)
-                            .clickable { playChord()}
+                            .clickable { playChord() }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))

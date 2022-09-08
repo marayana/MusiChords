@@ -1,9 +1,10 @@
 package com.jsdisco.soundscompose.domain.models
 
-data class FullChord(
+data class ChordSearchResult(
     val root: String,
     val chordName: String,
     val intervals: List<Int>,
     val midiKeys: List<Int>,
+    val midiKeysPiano: List<Int>,
     val noteNames: List<String>
 )

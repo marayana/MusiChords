@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,21 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.jsdisco.soundscompose.presentation.common.navigation.GameScreen
-import com.jsdisco.soundscompose.ui.theme.DTOrange
-import com.jsdisco.soundscompose.ui.theme.DTPink
+import com.jsdisco.soundscompose.R
+import com.jsdisco.soundscompose.ui.theme.*
 
 @Composable
 fun GameStartScreen(
     navController: NavController,
-    onSetAppBarTitle: (String) -> Unit
+    onSetAppBarTitle: (String) -> Unit,
+    onSetShowBackBtn: (Boolean) -> Unit
 ) {
 
+    val title = stringResource(id = R.string.title_games)
     LaunchedEffect(Unit) {
-        onSetAppBarTitle("Games")
+        onSetAppBarTitle(title)
+        onSetShowBackBtn(false)
     }
     Column(
         modifier = Modifier
@@ -46,15 +51,16 @@ fun GameStartScreen(
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFFF3853C),
-                        DTOrange
+                        Orange,
+                        OrangeLight
                     )
                 )
             ))
         {
             Text(
-                text = "Relative Pitch",
+                text = stringResource(id = R.string.title_relative_pitch),
                 fontSize = 24.sp,
+                color = Color.White,
                 modifier = Modifier.align(Alignment.Center)
             )
         }
@@ -68,15 +74,16 @@ fun GameStartScreen(
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            Color(0xFFEB84E1),
-                            DTPink
+                            Pink,
+                            PinkLight
                         )
                     )
                 ))
         {
             Text(
-                text = "Chords",
+                text = stringResource(id = R.string.title_chords),
                 fontSize = 24.sp,
+                color = Color.White,
                 modifier = Modifier.align(Alignment.Center)
             )
         }

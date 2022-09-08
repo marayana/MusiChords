@@ -1,5 +1,14 @@
 package com.jsdisco.soundscompose.presentation.home
 
+import androidx.lifecycle.ViewModel
+
+class HomeViewModel() : ViewModel(){
+
+    val test = "TestHomeViewModel"
+}
+
+
+/*
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +26,6 @@ class HomeViewModel @Inject constructor(
         Log.e("HVM", "init")
         test = 1
     }
-
-
 }
+
+ */

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SoundsCompose</string>
+
+    <string name="title_home">home</string>
+    <string name="title_games">training</string>
+    <string name="title_relative_pitch">relatives gehör</string>
+    <string name="title_chords">akkorde</string>
+    <string name="title_chords_info">akkord-lexikon</string>
+    <string name="title_settings_chords">akkorde - einstellungen</string>
+    <string name="title_settings_relative_pitch">relatives gehör - einstellungen</string>
+    <string name="title_settings_chords_create_exercise">neue übung erstellen</string>
+    <string name="title_settings_chords_exercises">akkorde - übungen</string>
+
+    <string-array name="bottom_nav">
+        <item name="bottom_nav_home">home</item>
+        <item name="bottom_nav_games">training</item>
+        <item name="bottom_nav_chordsinfo">akkorde</item>
+    </string-array>
+
+    <string name="settings_chords_play_chords">akkord-buttons</string>
+    <string name="settings_chords_play_chords_label">akkord abspielen, wenn button gedrückt wird</string>
+    <string name="settings_chords_inversions">inversionen</string>
+    <string name="settings_chords_inversions_label">auch akkord-inversionen abspielen</string>
+    <string name="settings_chords_open_position">weite lage</string>
+    <string name="settings_chords_open_position_label">akkorde auch in weiter lage abspielen</string>
+    <string name="settings_chords_select_exercise">übung auswählen</string>
+    <string name="settings_chords_create_new_exercise">neue übung erstellen</string>
+    <string name="settings_chords_delete_exercise">übung löschen</string>
+    <string name="settings_chords_dialog_delete_title">diese übung löschen?</string>
+    <string name="settings_chords_dialog_delete_confirm">löschen</string>
+    <string name="settings_chords_dialog_delete_dismiss">abbrechen</string>
+
+    <string name="settings_chords_new_exercise_title_placeholder">titel eingeben</string>
+    <string name="settings_chords_new_exercise_title_label">titel der übung</string>
+    <string name="settings_chords_new_exercise_chords_label">akkorde</string>
+    <string name="settings_chords_new_exercise_chords_description">bis zu 12 akkorde auswählen</string>
+    <string name="settings_chords_new_exercise_toast_enter_title">bitte einen titel für diese übung eingeben</string>
+    <string name="settings_chords_new_exercise_toast_too_few_chords">bitte mindestens zwei akkorde auswählen</string>
+    <string name="settings_chords_new_exercise_toast_save_success">übung gespeichert</string>
+    <string name="settings_chords_new_exercise_toast_too_many_chords">übungen können maximal 12 akkorde enthalten</string>
+    <string name="settings_chords_new_exercise_toast_exercise_exists">eine übung mit diesem titel existiert bereits, bitte einen anderen titel wählen</string>
+
+    <string-array name="notes_list">
+        <item name="note_c">C</item>
+        <item name="note_db">C#/Db</item>
+        <item name="note_d">D</item>
+        <item name="note_eb">D#/Eb</item>
+        <item name="note_e">E</item>
+        <item name="note_f">F</item>
+        <item name="note_gb">F#/Gb</item>
+        <item name="note_g">G</item>
+        <item name="note_ab">G#/Ab</item>
+        <item name="note_a">A</item>
+        <item name="note_bb">A#/Hb</item>
+        <item name="note_b">H</item>
+    </string-array>
+
+    <string-array name="intervals">
+        <item name="intervals1">kleine sekunde</item>
+        <item name="intervals2">große sekunde</item>
+        <item name="intervals3">kleine terz</item>
+        <item name="intervals4">große terz</item>
+        <item name="intervals5">quarte</item>
+        <item name="intervals6">tritonus</item>
+        <item name="intervals7">quinte</item>
+        <item name="intervals8">kleine sexte</item>
+        <item name="intervals9">große sexte</item>
+        <item name="intervals10">kleine septime</item>
+        <item name="intervals11">große septime</item>
+        <item name="intervals12">oktave</item>
+    </string-array>
+
+    <string-array name="settings_chords_chordgroup">
+        <item name="chordgroup1">standard</item>
+        <item name="chordgroup2">moll</item>
+        <item name="chordgroup3">7</item>
+        <item name="chordgroup4">dreiklang</item>
+        <item name="chordgroup5">vierklang</item>
+        <item name="chordgroup6">fünfklang</item>
+    </string-array>
+
+    <!-- TODO: don't change the order because it's hard-coupled to chords list in ChordsRepository -->
+    <string-array name="chords_list">
+        <item name="major">dur</item>
+        <item name="m">moll</item>
+        <item name="dim">dim</item>
+        <item name="dim7">dim7</item>
+        <item name="sus2">sus2</item>
+        <item name="sus4">sus4</item>
+        <item name="7sus4">7sus4</item>
+        <item name="aug">aug</item>
+        <item name="aug7">aug7</item>
+        <item name="aug9">aug9</item>
+        <item name="5">5</item>
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="9">9</item>
+        <item name="11">11</item>
+        <item name="13">13</item>
+        <item name="69">69</item>
+        <item name="7b5">7b5</item>
+        <item name="9b5">9b5</item>
+        <item name="7b9">7b5</item>
+        <item name="7sharp9">7#9</item>
+        <item name="7b5b9">7b5b9</item>
+        <item name="7sharp5b9">7#5b9</item>
+        <item name="7b5sharp9">7b5#9</item>
+        <item name="7sharp5sharp9">7#5#9</item>
+        <item name="9sharp11">9#11</item>
+        <item name="maj7">maj7</item>
+        <item name="maj9">maj9</item>
+        <item name="maj11">maj11</item>
+        <item name="maj13">maj13</item>
+        <item name="maj7b5">maj7b5</item>
+        <item name="maj7sharp5">maj7#5</item>
+        <item name="m6">m6</item>
+        <item name="m69">m69</item>
+        <item name="m7">m7</item>
+        <item name="m7b5">m7b5</item>
+        <item name="m9">m9</item>
+        <item name="m11">m11</item>
+        <item name="mmaj7">mmaj7</item>
+        <item name="mmaj7b5">mmaj7b5</item>
+        <item name="mmaj9">mmaj9</item>
+        <item name="mmaj11">mmaj11</item>
+        <item name="add9">add9</item>
+        <item name="madd9">madd9</item>
+    </string-array>
+<!--
+    <string name="s5">5</string>
+    <string name="6">6</string>
+    <string name="7">7</string>
+    <string name="9">9</string>
+    <string name="11">11</string>
+    <string name="13">13</string>
+    <string name="69">69</string>
+    <string name="major">dur</string>
+    <string name="m">moll</string>
+    <string name="dim">dim</string>
+    <string name="dim7">dim7</string>
+    <string name="sus2">sus2</string>
+    <string name="sus4">sus4</string>
+    <string name="7sus4">7sus4</string>
+    <string name="aug">aug</string>
+    <string name="7b5">7b5</string>
+    <string name="aug7">aug7</string>
+    <string name="9b5">9b5</string>
+    <string name="aug9">aug9</string>
+    <string name="7b9">7b5</string>
+    <string name="7sharp9">7#9</string>
+    <string name="7b5b9">7b5b9</string>
+    <string name="7sharp5b9">7#5b9</string>
+    <string name="7b5sharp9">7b5#9</string>
+    <string name="7sharp5sharp9">7#5#9</string>
+    <string name="9sharp11">9#11</string>
+    <string name="maj7">maj7</string>
+    <string name="maj7b5">maj7b5</string>
+    <string name="maj7sharp5">maj7#5</string>
+    <string name="maj9">maj9</string>
+    <string name="maj11">maj11</string>
+    <string name="maj13">maj13</string>
+    <string name="m6">m6</string>
+    <string name="m69">m69</string>
+    <string name="m7">m7</string>
+    <string name="m7b5">m7b5</string>
+    <string name="m9">m9</string>
+    <string name="m11">m11</string>
+    <string name="mmaj7">mmaj7</string>
+    <string name="mmaj7b5">mmaj7b5</string>
+    <string name="mmaj9">mmaj9</string>
+    <string name="mmaj11">mmaj11</string>
+    <string name="add9">add9</string>
+    <string name="madd9">madd9</string>-->
+</resources>

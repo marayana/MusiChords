@@ -21,15 +21,15 @@ fun DropDownList(
     isOpen: Boolean = false,
     list: List<String>,
     handleDropDown: (Boolean) -> Unit,
-    selectString: (String) -> Unit,
-    selectedRoot: String
+    selectOption: (String) -> Unit,
+    selectedOption: String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.TopStart)
             .padding(top = 10.dp)
-            .background(Color(0xCCFFFFFF))
+            .background(MaterialTheme.colors.surface)
             .clickable(onClick = { handleDropDown(true) })
     ) {
         ConstraintLayout(modifier = Modifier
@@ -38,8 +38,7 @@ fun DropDownList(
 
             val (label, iconView) = createRefs()
 
-            Text(text = selectedRoot,
-                color = Color.DarkGray,
+            Text(text = selectedOption,
                 modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(label) {
@@ -72,11 +71,10 @@ fun DropDownList(
                 onDismissRequest = { handleDropDown(false)},
                 modifier = Modifier
                     .width(150.dp)
-                    .background(color = Color.White)
             ) {
                 list.forEach{ item ->
                     DropdownMenuItem(onClick = {
-                        selectString(item)
+                        selectOption(item)
                         handleDropDown(false)
                     }) {
                         Text(text = item)

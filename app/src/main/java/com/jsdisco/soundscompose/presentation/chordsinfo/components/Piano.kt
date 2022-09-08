@@ -13,12 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.jsdisco.soundscompose.domain.models.FullChord
+import com.jsdisco.soundscompose.domain.models.ChordSearchResult
 import com.jsdisco.soundscompose.data.models.Note
 
 
 @Composable
-fun Piano(notesWhite: List<Note>, notesBlack: List<Note>, activeChord: FullChord) {
+fun Piano(notesWhite: List<Note>, notesBlack: List<Note>, activeChord: ChordSearchResult) {
 
     Column(modifier = Modifier.fillMaxWidth().height(100.dp)) {
         Box(modifier = Modifier.fillMaxSize()){
@@ -30,10 +30,10 @@ fun Piano(notesWhite: List<Note>, notesBlack: List<Note>, activeChord: FullChord
                 val keyBlackH = keyWhiteH * 0.6f
                 for((i, note) in notesWhite.slice(0..13).withIndex()){
 
-                    val keyColour = when(activeChord.midiKeys.indexOf(note.midiKey)){
-                        0 -> Color(0xFFAA2828)
-                        -1 -> Color(0xCCFFFFFF)
-                        else -> Color(0xFFBE5A5A)
+                    val keyColour = when(activeChord.midiKeysPiano.indexOf(note.midiKey)){
+                        0 -> Color(0xFF3A629C) /* TODO */
+                        -1 -> Color(0xFFFFFFFF)
+                        else -> Color(0xFF92AED6)
                     }
 
                     val path = Path()
@@ -49,20 +49,20 @@ fun Piano(notesWhite: List<Note>, notesBlack: List<Note>, activeChord: FullChord
                         size = Size(keyWhiteW, keyWhiteH),
                     )
                 }
+
                 val noBlackIndices = listOf(2, 6, 9 )
                 val offset = keyWhiteW - (keyBlackW/2f)
                 var blackNotesIndex = 0
                 for (i in (0..12)){
-                    // (i, note) in notesBlack.slice(0..9).withIndex()
                     if (noBlackIndices.contains(i)){
                         continue
                     }
 
                     val note = notesBlack[blackNotesIndex]
-                    val keyColour = when(activeChord.midiKeys.indexOf(note.midiKey)){
-                        0 -> Color(0xFFAA2828)
+                    val keyColour = when(activeChord.midiKeysPiano.indexOf(note.midiKey)){
+                        0 -> Color(0xFF3A629C) /* TODO */
                         -1 -> Color(0xFF000000)
-                        else -> Color(0xFFBE5A5A)
+                        else -> Color(0xFF92AED6)
                     }
                     drawRect(
                         color = keyColour,

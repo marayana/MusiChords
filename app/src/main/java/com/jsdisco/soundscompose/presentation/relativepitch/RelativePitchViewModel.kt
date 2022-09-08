@@ -2,34 +2,32 @@ package com.jsdisco.soundscompose.presentation.relativepitch
 
 import android.content.Context
 import android.media.SoundPool
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jsdisco.soundscompose.data.SoundsRepository
 import com.jsdisco.soundscompose.data.models.Sound
-import com.jsdisco.soundscompose.domain.models.Solution
-import com.jsdisco.soundscompose.presentation.common.components.ButtonColour
-import com.jsdisco.soundscompose.presentation.common.components.ButtonState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.jsdisco.soundscompose.domain.models.IntervalSolution
+import com.jsdisco.soundscompose.presentation.common.ButtonColour
+import com.jsdisco.soundscompose.presentation.common.ButtonState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class RelativePitchViewModel @Inject constructor(
-    private val repo: SoundsRepository,
+
+class RelativePitchViewModel (
+    repo: SoundsRepository,
     private val soundPool: SoundPool
 ) : ViewModel() {
 
     private val _soundResources = repo.soundResources
-    private val sounds = mutableListOf<Sound>()
+    private val _sounds = mutableListOf<Sound>()
+    private val _currSoundIds = mutableListOf<Int>()
 
     val intervals = repo.intervals
 
-    private var solution: Solution? = null
+    private var solution: IntervalSolution? = null
 
     private val isFound = mutableStateOf(true)
 
@@ -37,12 +35,24 @@ class RelativePitchViewModel @Inject constructor(
 
     val buttonStates = initButtonStates().toMutableStateList()
 
+    var soundsLoaded = 0
+    var allSoundsLoaded = mutableStateOf(false)
+
     fun loadSounds(context: Context){
-        if (sounds.isEmpty()){
+        if (_sounds.isEmpty()){
             viewModelScope.launch(Dispatchers.IO) {
+                soundPool.setOnLoadCompleteListener{ soundPool, sampleId, status ->
+                    if (status == 0){
+                        soundsLoaded++
+                    }
+                    if (soundsLoaded == _soundResources.size){
+                        allSoundsLoaded.value = true
+                    }
+
+                }
                 _soundResources.forEach{
                     val soundId = soundPool.load(context, it.resId, 1)
-                    sounds.add(Sound(it.name, it.midiKey, it.resId, soundId))
+                    _sounds.add(Sound(it.name, it.midiKey, it.resId, soundId))
                 }
             }
         }
@@ -52,7 +62,8 @@ class RelativePitchViewModel @Inject constructor(
         if (isFound.value){
             isFound.value = false
 
-            resetBtnStates()
+            resetBtnColours()
+            toggleBtnsEnabled(true)
             createSolution()
         }
         playSounds()
@@ -63,13 +74,15 @@ class RelativePitchViewModel @Inject constructor(
             isFound.value = true
             buttonStates.find { it.index == answer.toInt()-1 }?.let { btnState ->
                 //btnState.textColour = ButtonColour.textOnColour
-                btnState.bgColour = ButtonColour.correctBg
+                //btnState.bgColour = ButtonColour.correctBg
+                btnState.borderColour = ButtonColour.correctBg
             }
-            buttonStates.forEach { btn -> btn.isDisabled = true }
+            toggleBtnsEnabled(false)
         } else {
             buttonStates.find { it.index == answer.toInt()-1 }?.let { btnState ->
                 //btnState.textColour = ButtonColour.textOnColour
-                btnState.bgColour = ButtonColour.incorrectBg
+                btnState.borderColour = ButtonColour.incorrectBg
+                btnState.isEnabled = false
             }
         }
     }
@@ -80,20 +93,25 @@ class RelativePitchViewModel @Inject constructor(
         val randomFirstMk = (0..12).shuffled().last() + 48
         val secondMk = randomFirstMk + solutionInterval
 
-        solution = Solution(solutionInterval.toString(), randomFirstMk, listOf(randomFirstMk, secondMk))
+        solution = IntervalSolution(solutionInterval.toString(), listOf(randomFirstMk, secondMk))
     }
 
     private fun playSounds() {
         val soundsList = mutableListOf<Sound>()
         solution?.midiKeys?.forEach { mK ->
-            val sound = sounds.find { it.midiKey == mK }
+            val sound = _sounds.find { it.midiKey == mK }
             if (sound != null){
                 soundsList.add(sound)
             }
         }
         viewModelScope.launch(Dispatchers.Default) {
+            _currSoundIds.forEach { id ->
+                soundPool.stop(id)
+            }
+            _currSoundIds.clear()
             soundsList.forEach { sound ->
-                soundPool.play(sound.sound,1f, 1f, 1, 0, 1f )
+                val id = soundPool.play(sound.sound,1f, 1f, 1, 0, 1f )
+                _currSoundIds.add(id)
                 delay((delay.value * 1000).toLong())
             }
         }
@@ -101,22 +119,27 @@ class RelativePitchViewModel @Inject constructor(
 
     private fun initButtonStates() : List<ButtonState> {
         val states = intervals.map{ interval ->
-            ButtonState(interval.halfTones-1, interval.nameGerman)
+            ButtonState(interval.halfTones-1, (interval.halfTones).toString(), 0) /* TODO stringIndex */
         }
         return states
     }
 
-    private fun resetBtnStates(){
-        buttonStates.forEach { btn ->
-            btn.textColour = ButtonColour.textOnInitial
-            btn.bgColour = ButtonColour.initialBg
-            btn.isDisabled = false
+    private fun resetBtnColours(){
+        buttonStates.forEach { btnState ->
+            btnState.borderColour = ButtonColour.transparentBorderColour
+        }
+    }
+
+    private fun toggleBtnsEnabled(value: Boolean){
+        buttonStates.forEach { btnState ->
+            btnState.isEnabled = value
         }
     }
 
     fun reset(){
         isFound.value = true
-        resetBtnStates()
+        resetBtnColours()
+        toggleBtnsEnabled(false)
     }
 
     fun setDelay(value: Float){

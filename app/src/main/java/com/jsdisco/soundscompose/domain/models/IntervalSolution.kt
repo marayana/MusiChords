@@ -1,7 +1,6 @@
 package com.jsdisco.soundscompose.domain.models
 
-data class Solution(
+data class IntervalSolution(
     val name: String,
-    val firstMk: Int,
     val midiKeys: List<Int>
 )
