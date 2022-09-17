@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jsdisco.musichords.R
@@ -29,6 +30,7 @@ import com.jsdisco.musichords.ui.theme.PinkLight
 import com.jsdisco.musichords.ui.theme.Transparent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.io.File.separator
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -224,9 +226,15 @@ fun SettingsChordsCreateExerciseUI(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            val selectedChordNames = mutableListOf<String>()
+            selectedChords.forEachIndexed { index, chord ->
+               if (chord.isSelected){
+                   selectedChordNames.add(chordNames[index])
+               }
+            }
+
             Text(
-                text = selectedChords.filter { it.isSelected }
-                    .joinToString(separator = "     ") { it.name.replace("sharp", "#") },
+                text = selectedChordNames.joinToString(separator = "     "),
                 color = PinkLight,
                 lineHeight = 30.sp
             )
@@ -277,7 +285,10 @@ fun SettingsChordsCreateExerciseUI(
                                 tint = MaterialTheme.colors.onSecondary
                             )
                             Spacer(modifier = Modifier.height(20.dp))
-                            Text(text = snackbarData.message)
+                            Text(
+                                text = snackbarData.message,
+                                textAlign = TextAlign.Center
+                            )
                         }
                     }
                 }
@@ -313,7 +324,6 @@ fun ChordBtnsRow(
                         onClick = { toggleSelectChord(chordsRow[i]) }
                     )
                 }
-
             }
         }
     }
