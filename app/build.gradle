@@ -2,14 +2,13 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    //id 'dagger.hilt.android.plugin'
 }
 
 android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.jsdisco.soundscompose"
+        applicationId "com.jsdisco.musichords"
         minSdk 21
         targetSdk 32
         versionCode 1

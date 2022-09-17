@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SoundsCompose</string>
+    <string name="app_name">MusiChords</string>
 
     <string name="title_home">home</string>
     <string name="title_games">training</string>
@@ -12,11 +12,21 @@
     <string name="title_settings_chords_create_exercise">neue übung erstellen</string>
     <string name="title_settings_chords_exercises">akkorde - übungen</string>
 
+    <string name="top_bar_icon_back">zurück</string>
+    <string name="top_bar_icon_settings">gehe zu einstellungen</string>
+    <string name="top_bar_icon_exercises">gehe zu übungen</string>
+
     <string-array name="bottom_nav">
-        <item name="bottom_nav_home">home</item>
         <item name="bottom_nav_games">training</item>
         <item name="bottom_nav_chordsinfo">akkorde</item>
     </string-array>
+
+    <string name="chords_loading">sounds werden geladen…</string>
+    <string name="chords_loading_error">beim laden der sounds ist ein fehler aufgetreten</string>
+    <string name="chords_icon_no_delay">kein delay</string>
+    <string name="chords_icon_max_delay">maximales delay</string>
+    <string name="chords_icon_play">akkord abspielen</string>
+    <string name="chords_icon_next">nächste runde</string>
 
     <string name="settings_chords_play_chords">akkord-buttons</string>
     <string name="settings_chords_play_chords_label">akkord abspielen, wenn button gedrückt wird</string>
@@ -25,21 +35,49 @@
     <string name="settings_chords_open_position">weite lage</string>
     <string name="settings_chords_open_position_label">akkorde auch in weiter lage abspielen</string>
     <string name="settings_chords_select_exercise">übung auswählen</string>
+
+
     <string name="settings_chords_create_new_exercise">neue übung erstellen</string>
     <string name="settings_chords_delete_exercise">übung löschen</string>
     <string name="settings_chords_dialog_delete_title">diese übung löschen?</string>
     <string name="settings_chords_dialog_delete_confirm">löschen</string>
     <string name="settings_chords_dialog_delete_dismiss">abbrechen</string>
+    <string name="settings_chords_expand_exercise">übung aufklappen</string>
+    <string name="settings_chords_collapse_exercise">übung einklappen</string>
 
     <string name="settings_chords_new_exercise_title_placeholder">titel eingeben</string>
     <string name="settings_chords_new_exercise_title_label">titel der übung</string>
     <string name="settings_chords_new_exercise_chords_label">akkorde</string>
     <string name="settings_chords_new_exercise_chords_description">bis zu 12 akkorde auswählen</string>
+    <string name="settings_chords_new_exercise_toast_ok">ok</string>
     <string name="settings_chords_new_exercise_toast_enter_title">bitte einen titel für diese übung eingeben</string>
     <string name="settings_chords_new_exercise_toast_too_few_chords">bitte mindestens zwei akkorde auswählen</string>
     <string name="settings_chords_new_exercise_toast_save_success">übung gespeichert</string>
     <string name="settings_chords_new_exercise_toast_too_many_chords">übungen können maximal 12 akkorde enthalten</string>
-    <string name="settings_chords_new_exercise_toast_exercise_exists">eine übung mit diesem titel existiert bereits, bitte einen anderen titel wählen</string>
+    <string name="settings_chords_new_exercise_toast_exercise_exists">die übung "%1$s" existiert bereits</string>
+    <string name="settings_chords_new_exercise_save">übung speichern</string>
+
+
+    <string name="rp_loading">sounds werden geladen…</string>
+    <string name="rp_loading_error">beim laden der sounds ist ein fehler aufgetreten</string>
+    <string name="rp_icon_no_delay">kein delay</string>
+    <string name="rp_icon_max_delay">maximales delay</string>
+    <string name="rp_icon_play">intervall abspielen</string>
+    <string name="rp_icon_next">nächste runde</string>
+
+    <string name="settings_rp_play_intervals">intervallbuttons</string>
+    <string name="settings_rp_play_intervals_label">interval abspielen, wenn antwortbutton gedrückt wird</string>
+    <string name="settings_rp_compound_intervals">weite intervalle</string>
+    <string name="settings_rp_compound_intervals_label">auch weite intervalle abspielen</string>
+    <string name="settings_rp_notation_abbr">notation</string>
+    <string name="settings_rp_notation_abbr_label">intervall-kurznotation auf buttons</string>
+    <string name="settings_rp_select_intervals">übungs-intervalle</string>
+    <string name="settings_rp_toast_too_few_intervals">übung muss mindestens zwei intervalle enthalten</string>
+
+    <string name="chords_info_notes">noten</string>
+    <string name="chords_info_halftones">halbtöne</string>
+    <string name="chords_info_midikeys">midi keys</string>
+    <string name="chords_info_icon_play">akkord abspielen</string>
 
     <string-array name="notes_list">
         <item name="note_c">C</item>
@@ -56,7 +94,46 @@
         <item name="note_b">H</item>
     </string-array>
 
-    <string-array name="intervals">
+    <!-- don't change the order, because it's hard-coupled to notes list in ChordsRepository -->
+    <string-array name="notes_list_chordresult">
+        <item name="note_result_c">C</item>
+        <item name="note_result_d">D</item>
+        <item name="note_result_e">E</item>
+        <item name="note_result_f">F</item>
+        <item name="note_result_g">G</item>
+        <item name="note_result_a">A</item>
+        <item name="note_result_b">H</item>
+        <item name="note_result_cb">Cb</item>
+        <item name="note_result_cbb">Cbb</item>
+        <item name="note_result_c#">C#</item>
+        <item name="note_result_c##">C##</item>
+        <item name="note_result_db">Db</item>
+        <item name="note_result_dbb">Dbb</item>
+        <item name="note_result_d#">D#</item>
+        <item name="note_result_d##">D##</item>
+        <item name="note_result_eb">Eb</item>
+        <item name="note_result_ebb">Ebb</item>
+        <item name="note_result_e#">E#</item>
+        <item name="note_result_e##">E##</item>
+        <item name="note_result_fb">Fb</item>
+        <item name="note_result_fbb">Fbb</item>
+        <item name="note_result_f#">F#</item>
+        <item name="note_result_f##">F##</item>
+        <item name="note_result_gb">Gb</item>
+        <item name="note_result_gbb">Gbb</item>
+        <item name="note_result_g#">G#</item>
+        <item name="note_result_g##">G##</item>
+        <item name="note_result_ab">Ab</item>
+        <item name="note_result_abb">Abb</item>
+        <item name="note_result_a#">A#</item>
+        <item name="note_result_a##">A##</item>
+        <item name="note_result_bb">Hb</item>
+        <item name="note_result_bbb">Hbb</item>
+        <item name="note_result_B#">H#</item>
+        <item name="note_result_B##">H##</item>
+    </string-array>
+
+    <string-array name="intervals_list">
         <item name="intervals1">kleine sekunde</item>
         <item name="intervals2">große sekunde</item>
         <item name="intervals3">kleine terz</item>
@@ -71,16 +148,31 @@
         <item name="intervals12">oktave</item>
     </string-array>
 
-    <string-array name="settings_chords_chordgroup">
-        <item name="chordgroup1">standard</item>
-        <item name="chordgroup2">moll</item>
-        <item name="chordgroup3">7</item>
-        <item name="chordgroup4">dreiklang</item>
-        <item name="chordgroup5">vierklang</item>
-        <item name="chordgroup6">fünfklang</item>
+    <string-array name="intervals_list_abbr">
+        <item name="intervals1">2k</item>
+        <item name="intervals2">2g</item>
+        <item name="intervals3">3k</item>
+        <item name="intervals4">3g</item>
+        <item name="intervals5">4r</item>
+        <item name="intervals6">4ü</item>
+        <item name="intervals7">5r</item>
+        <item name="intervals8">6k</item>
+        <item name="intervals9">6g</item>
+        <item name="intervals10">7k</item>
+        <item name="intervals11">7g</item>
+        <item name="intervals12">8r</item>
     </string-array>
 
-    <!-- TODO: don't change the order because it's hard-coupled to chords list in ChordsRepository -->
+    <string-array name="settings_chords_chordgroup">
+        <item name="chordgroup1">häufig verwendet</item>
+        <item name="chordgroup2">moll</item>
+        <item name="chordgroup3">septakkorde</item>
+        <item name="chordgroup4">dreiklänge</item>
+        <item name="chordgroup5">vierklänge</item>
+        <item name="chordgroup6">fünfklänge</item>
+    </string-array>
+
+    <!-- don't change the order, because it's hard-coupled to chords list in ChordsRepository -->
     <string-array name="chords_list">
         <item name="major">dur</item>
         <item name="m">moll</item>

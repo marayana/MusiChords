@@ -1,5 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">SoundsCompose</string>
+<resources>
+    <string name="app_name">MusiChords</string>
 
     <string name="title_home">home</string>
     <string name="title_games">training</string>
@@ -11,11 +11,21 @@
     <string name="title_settings_chords_create_exercise">create new exercise</string>
     <string name="title_settings_chords_exercises">chords exercises</string>
 
+    <string name="top_bar_icon_back">go back</string>
+    <string name="top_bar_icon_settings">open settings</string>
+    <string name="top_bar_icon_exercises">open exercises</string>
+
     <string-array name="bottom_nav">
-        <item name="bottom_nav_home">home</item>
         <item name="bottom_nav_games">training</item>
         <item name="bottom_nav_chordsinfo">chords</item>
     </string-array>
+
+    <string name="chords_loading">loading sounds…</string>
+    <string name="chords_loading_error">an error occurred while loading sounds</string>
+    <string name="chords_icon_no_delay">no delay</string>
+    <string name="chords_icon_max_delay">maximum delay</string>
+    <string name="chords_icon_play">play chord</string>
+    <string name="chords_icon_next">next chord</string>
 
 
     <string name="settings_chords_play_chords">chord buttons</string>
@@ -25,23 +35,53 @@
     <string name="settings_chords_open_position">open position</string>
     <string name="settings_chords_open_position_label">include chords in open position</string>
     <string name="settings_chords_select_exercise">select exercise</string>
+
+
     <string name="settings_chords_create_new_exercise">create new exercise</string>
     <string name="settings_chords_delete_exercise">delete exercise</string>
     <string name="settings_chords_dialog_delete_title">delete this exercise?</string>
     <string name="settings_chords_dialog_delete_confirm">delete</string>
     <string name="settings_chords_dialog_delete_dismiss">cancel</string>
+    <string name="settings_chords_expand_exercise">expand exercise</string>
+    <string name="settings_chords_collapse_exercise">collapse exercise</string>
 
 
     <string name="settings_chords_new_exercise_title_placeholder">enter a title</string>
     <string name="settings_chords_new_exercise_title_label">exercise title</string>
     <string name="settings_chords_new_exercise_chords_label">chords</string>
     <string name="settings_chords_new_exercise_chords_description">select up to 12 chords</string>
+    <string name="settings_chords_new_exercise_toast_ok">ok</string>
     <string name="settings_chords_new_exercise_toast_enter_title">please enter a title for this exercise</string>
     <string name="settings_chords_new_exercise_toast_too_few_chords">please select at least two chords</string>
     <string name="settings_chords_new_exercise_toast_save_success">exercise saved</string>
     <string name="settings_chords_new_exercise_toast_too_many_chords">exercises can\'t have more than 12 chords</string>
-    <string name="settings_chords_new_exercise_toast_exercise_exists">an exercise with this title already exists, please choose a different title</string>
+    <string name="settings_chords_new_exercise_toast_exercise_exists">exercise "%1$s" already exists</string>
+    <string name="settings_chords_new_exercise_save">save exercise</string>
 
+
+
+
+    <string name="rp_loading">loading sounds…</string>
+    <string name="rp_loading_error">an error occurred while loading sounds</string>
+    <string name="rp_icon_no_delay">no delay</string>
+    <string name="rp_icon_max_delay">maximum delay</string>
+    <string name="rp_icon_play">play interval</string>
+    <string name="rp_icon_next">next interval</string>
+
+
+    <string name="settings_rp_play_intervals">interval buttons</string>
+    <string name="settings_rp_play_intervals_label">play interval when tapping a button</string>
+    <string name="settings_rp_compound_intervals">compound intervals</string>
+    <string name="settings_rp_compound_intervals_label">include compound intervals</string>
+    <string name="settings_rp_notation_abbr">notation</string>
+    <string name="settings_rp_notation_abbr_label">abbreviated notation on buttons</string>
+    <string name="settings_rp_select_intervals">select intervals</string>
+    <string name="settings_rp_toast_too_few_intervals">exercise must have at least two intervals</string>
+
+    <string name="chords_info_notes">notes</string>
+    <string name="chords_info_halftones">halftones</string>
+    <string name="chords_info_midikeys">midi keys</string>
+    <string name="chords_info_icon_play">play chord</string>
 
     <string-array name="notes_list">
         <item name="note_c">C</item>
@@ -58,7 +98,46 @@
         <item name="note_b">B</item>
     </string-array>
 
-    <string-array name="intervals">
+    <!-- don't change the order, because it's hard-coupled to notes list in ChordsRepository -->
+    <string-array name="notes_list_chordresult">
+        <item name="note_result_c">C</item>
+        <item name="note_result_d">D</item>
+        <item name="note_result_e">E</item>
+        <item name="note_result_f">F</item>
+        <item name="note_result_g">G</item>
+        <item name="note_result_a">A</item>
+        <item name="note_result_b">B</item>
+        <item name="note_result_cb">Cb</item>
+        <item name="note_result_cbb">Cbb</item>
+        <item name="note_result_c#">C#</item>
+        <item name="note_result_c##">C##</item>
+        <item name="note_result_db">Db</item>
+        <item name="note_result_dbb">Dbb</item>
+        <item name="note_result_d#">D#</item>
+        <item name="note_result_d##">D##</item>
+        <item name="note_result_eb">Eb</item>
+        <item name="note_result_ebb">Ebb</item>
+        <item name="note_result_e#">E#</item>
+        <item name="note_result_e##">E##</item>
+        <item name="note_result_fb">Fb</item>
+        <item name="note_result_fbb">Fbb</item>
+        <item name="note_result_f#">F#</item>
+        <item name="note_result_f##">F##</item>
+        <item name="note_result_gb">Gb</item>
+        <item name="note_result_gbb">Gbb</item>
+        <item name="note_result_g#">G#</item>
+        <item name="note_result_g##">G##</item>
+        <item name="note_result_ab">Ab</item>
+        <item name="note_result_abb">Abb</item>
+        <item name="note_result_a#">A#</item>
+        <item name="note_result_a##">A##</item>
+        <item name="note_result_bb">Bb</item>
+        <item name="note_result_bbb">Bbb</item>
+        <item name="note_result_B#">B#</item>
+        <item name="note_result_B##">B##</item>
+    </string-array>
+
+    <string-array name="intervals_list">
         <item name="intervals1">minor second</item>
         <item name="intervals2">major second</item>
         <item name="intervals3">minor third</item>
@@ -73,16 +152,31 @@
         <item name="intervals12">octave</item>
     </string-array>
 
+    <string-array name="intervals_list_abbr">
+        <item name="intervals1">m2</item>
+        <item name="intervals2">M2</item>
+        <item name="intervals3">m3</item>
+        <item name="intervals4">M3</item>
+        <item name="intervals5">P4</item>
+        <item name="intervals6">A4</item>
+        <item name="intervals7">P5</item>
+        <item name="intervals8">m6</item>
+        <item name="intervals9">M6</item>
+        <item name="intervals10">m7</item>
+        <item name="intervals11">M7</item>
+        <item name="intervals12">P8</item>
+    </string-array>
+
     <string-array name="settings_chords_chordgroup">
-        <item name="chordgroup1">standard</item>
+        <item name="chordgroup1">common</item>
         <item name="chordgroup2">minor</item>
-        <item name="chordgroup3">7</item>
-        <item name="chordgroup4">three notes</item>
+        <item name="chordgroup3">seventh</item>
+        <item name="chordgroup4">triads</item>
         <item name="chordgroup5">four notes</item>
         <item name="chordgroup6">five notes</item>
     </string-array>
 
-    <!-- TODO: don't change the order because it's hard-coupled to chords list in ChordsRepository -->
+    <!-- don't change the order, because it's hard-coupled to chords list in ChordsRepository -->
     <string-array name="chords_list">
         <item name="major">major</item>
         <item name="m">m</item>
@@ -130,48 +224,4 @@
         <item name="madd9">madd9</item>
     </string-array>
 
-   <!-- <string name="s5">5</string>
-    <string name="6">6</string>
-    <string name="7">7</string>
-    <string name="9">9</string>
-    <string name="11">11</string>
-    <string name="13">13</string>
-    <string name="69">69</string>
-    <string name="major">major</string>
-    <string name="m">m</string>
-    <string name="dim">dim</string>
-    <string name="dim7">dim7</string>
-    <string name="sus2">sus2</string>
-    <string name="sus4">sus4</string>
-    <string name="7sus4">7sus4</string>
-    <string name="aug">aug</string>
-    <string name="7b5">7b5</string>
-    <string name="aug7">aug7</string>
-    <string name="9b5">9b5</string>
-    <string name="aug9">aug9</string>
-    <string name="7b9">7b5</string>
-    <string name="7sharp9">7#9</string>
-    <string name="7b5b9">7b5b9</string>
-    <string name="7sharp5b9">7#5b9</string>
-    <string name="7b5sharp9">7b5#9</string>
-    <string name="7sharp5sharp9">7#5#9</string>
-    <string name="9sharp11">9#11</string>
-    <string name="maj7">maj7</string>
-    <string name="maj7b5">maj7b5</string>
-    <string name="maj7sharp5">maj7#5</string>
-    <string name="maj9">maj9</string>
-    <string name="maj11">maj11</string>
-    <string name="maj13">maj13</string>
-    <string name="m6">m6</string>
-    <string name="m69">m69</string>
-    <string name="m7">m7</string>
-    <string name="m7b5">m7b5</string>
-    <string name="m9">m9</string>
-    <string name="m11">m11</string>
-    <string name="mmaj7">mmaj7</string>
-    <string name="mmaj7b5">mmaj7b5</string>
-    <string name="mmaj9">mmaj9</string>
-    <string name="mmaj11">mmaj11</string>
-    <string name="add9">add9</string>
-    <string name="madd9">madd9</string>-->
 </resources>
