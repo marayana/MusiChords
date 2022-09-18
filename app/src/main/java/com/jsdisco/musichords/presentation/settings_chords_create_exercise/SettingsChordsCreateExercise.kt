@@ -30,7 +30,6 @@ import com.jsdisco.musichords.ui.theme.PinkLight
 import com.jsdisco.musichords.ui.theme.Transparent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.io.File.separator
 
 
 @OptIn(ExperimentalComposeUiApi::class)
