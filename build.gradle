@@ -4,9 +4,6 @@ buildscript {
         koin_version = '3.2.0'
         room_version = '2.4.2'
     }
-    dependencies {
-        //classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
-    }
 }
 plugins {
     id 'com.android.application' version '7.2.0' apply false
