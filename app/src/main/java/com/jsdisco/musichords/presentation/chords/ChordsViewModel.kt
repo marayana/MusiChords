@@ -8,20 +8,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jsdisco.musichords.data.ChordsRepository
-import com.jsdisco.musichords.data.SoundStatus
 import com.jsdisco.musichords.data.SoundsRepository
 import com.jsdisco.musichords.data.local.models.SettingsChords
 import com.jsdisco.musichords.data.local.models.ChordsSet
 import com.jsdisco.musichords.data.models.Chord
 import com.jsdisco.musichords.data.models.Sound
+import com.jsdisco.musichords.data.models.SoundResource
 import com.jsdisco.musichords.domain.models.SelectBtnState
 import com.jsdisco.musichords.domain.models.ChordSolution
 import com.jsdisco.musichords.presentation.common.ButtonColour
 import com.jsdisco.musichords.presentation.common.ButtonState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.math.floor
 
 enum class GameStatus { INITIAL, GUESS, FOUND }
@@ -36,8 +33,6 @@ class ChordsViewModel(
     // SOUNDS
     private val _soundResources = soundsRepo.soundResources
     private val _currSoundIds = mutableListOf<Int>()
-    private var soundsLoaded = 0
-    val soundStatus = soundsRepo.soundStatus
     private var _playSoundsJob: Job? = null
 
     // CHORD SETTINGS
@@ -73,7 +68,7 @@ class ChordsViewModel(
             chordsRepo.initChordsSets()
             chordsRepo.initSettingsChords()
 
-            getSettingsChords()
+            _settingsChords.value = getSettingsChords()
             getChordsSets()
             getActiveChordsSet()
         }
@@ -81,10 +76,8 @@ class ChordsViewModel(
 
     // SETTINGS
 
-    private fun getSettingsChords() {
-        viewModelScope.launch {
-            _settingsChords.value = chordsRepo.getSettingsChords()
-        }
+    private suspend fun getSettingsChords() = withContext(viewModelScope.coroutineContext) {
+        chordsRepo.getSettingsChords()
     }
 
     private fun getChordsSets() {
@@ -97,7 +90,9 @@ class ChordsViewModel(
         viewModelScope.launch {
             _activeChordsSet.value = chordsRepo.getActiveChordsSet()
             _activeChords.value = chordsRepo.getActiveChords(_activeChordsSet.value)
+
             buttonStates = initButtonStates(_activeChords.value)
+            createSolution()
         }
     }
 
@@ -167,6 +162,7 @@ class ChordsViewModel(
                 val settings = _settingsChords.value
                 settings.withInversions = !settings.withInversions
                 chordsRepo.updateSettingsChords(settings)
+                createSolution()
             } catch (e: Exception) {
                 Log.e("ChordsViewModel", "Error in toggleInversions(): $e")
             }
@@ -179,6 +175,7 @@ class ChordsViewModel(
                 val settings = _settingsChords.value
                 settings.withOpenPosition = !settings.withOpenPosition
                 chordsRepo.updateSettingsChords(settings)
+                createSolution()
             } catch (e: Exception) {
                 Log.e("ChordsViewModel", "Error in toggleOpenPosition(): $e")
             }
@@ -191,20 +188,17 @@ class ChordsViewModel(
     fun loadSounds(context: Context) {
         if (soundsRepo.sounds.isEmpty()) {
 
-            viewModelScope.launch(Dispatchers.IO) {
-                soundPool.setOnLoadCompleteListener { _, _, status ->
-                    if (status == 0) {
-                        soundsLoaded++
-                    }
-                    if (status != 0){
-                        soundsRepo.soundStatus.value = SoundStatus.FAILURE
-                        return@setOnLoadCompleteListener
-                    }
-                    if (soundsLoaded == _soundResources.size) {
-                        soundsRepo.soundStatus.value = SoundStatus.SUCCESS
-                    }
+            val soundsToLoad = mutableListOf<SoundResource>()
+            _soundResources.forEach { res ->
+                if (solution.finalMidiKeys.contains(res.midiKey)){
+                    soundsToLoad.add(0, res)
+                } else {
+                    soundsToLoad.add(res)
                 }
-                _soundResources.forEach {
+            }
+
+            viewModelScope.launch(Dispatchers.Default) {
+                soundsToLoad.forEach {
                     val soundId = soundPool.load(context, it.resId, 1)
                     soundsRepo.sounds.add(Sound(it.name, it.midiKey, it.resId, soundId))
                 }
@@ -245,8 +239,13 @@ class ChordsViewModel(
     }
 
     private fun createSolution() {
-        val randomChord = _activeChords.value.shuffled().last()
-        val randomRoot = (0..11).shuffled().last()
+        var randomChord: Chord
+        var randomRoot: Int
+
+        do {
+            randomChord = _activeChords.value.shuffled().last()
+            randomRoot = (0..11).shuffled().last()
+        } while (randomChord == solution.chord && randomRoot == solution.root)
 
         val rootName = if (randomChord.isMajor) roots[randomRoot].rootMajor else roots[randomRoot].rootMinor
         val noteIndex = chordsRepo.notes.indexOf(rootName)
@@ -308,7 +307,6 @@ class ChordsViewModel(
 
         var currentIntervals = intervals
 
-
         for (i in (0 until times)){
 
             val scaledDownIntervals = currentIntervals.map { it % 12 }.sorted()
@@ -346,20 +344,21 @@ class ChordsViewModel(
         return sounds
     }
 
-    private fun playSounds(currSounds: List<Sound>) {
-        _playSoundsJob?.cancel()
+    private fun playSounds(sounds: List<Sound>){
 
         _playSoundsJob = viewModelScope.launch(Dispatchers.Default) {
             _currSoundIds.forEach { id ->
                 soundPool.stop(id)
             }
             _currSoundIds.clear()
-            currSounds.forEach { sound ->
+
+            sounds.forEach { sound ->
                 val id = soundPool.play(sound.sound, 1f, 1f, 1, 0, 1f)
                 _currSoundIds.add(id)
                 delay((delay.value * 300).toLong())
             }
         }
+
     }
 
     fun playChord(chord: Chord) {
@@ -371,7 +370,6 @@ class ChordsViewModel(
     fun handlePlayBtn() {
         if (gameStatus.value == GameStatus.INITIAL) {
             gameStatus.value = GameStatus.GUESS
-            createSolution()
             setButtonStates()
         }
         playSounds(getCurrSounds(getMidiKeysForChord(solution.chord.intervals)))

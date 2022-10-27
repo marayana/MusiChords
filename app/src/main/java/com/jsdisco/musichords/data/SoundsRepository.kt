@@ -1,10 +1,7 @@
 package com.jsdisco.musichords.data
 
-import androidx.compose.runtime.mutableStateOf
 import com.jsdisco.musichords.R
 import com.jsdisco.musichords.data.models.*
-
-enum class SoundStatus { LOADING, SUCCESS, FAILURE}
 
 class SoundsRepository {
 
@@ -13,8 +10,6 @@ class SoundsRepository {
     val soundResources: List<SoundResource> = loadSoundResources()
 
     val sounds = mutableListOf<Sound>()
-
-    val soundStatus = mutableStateOf(SoundStatus.LOADING)
 
     private fun loadSoundResources(): List<SoundResource> {
         return listOf(

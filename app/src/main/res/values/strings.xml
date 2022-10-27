@@ -20,8 +20,6 @@
         <item name="bottom_nav_chordsinfo">chords</item>
     </string-array>
 
-    <string name="chords_loading">loading sounds…</string>
-    <string name="chords_loading_error">an error occurred while loading sounds</string>
     <string name="chords_icon_no_delay">no delay</string>
     <string name="chords_icon_max_delay">maximum delay</string>
     <string name="chords_icon_play">play chord</string>
@@ -59,10 +57,6 @@
     <string name="settings_chords_new_exercise_save">save exercise</string>
 
 
-
-
-    <string name="rp_loading">loading sounds…</string>
-    <string name="rp_loading_error">an error occurred while loading sounds</string>
     <string name="rp_icon_no_delay">no delay</string>
     <string name="rp_icon_max_delay">maximum delay</string>
     <string name="rp_icon_play">play interval</string>

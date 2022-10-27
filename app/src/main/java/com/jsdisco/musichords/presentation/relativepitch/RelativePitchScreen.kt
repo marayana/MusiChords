@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.jsdisco.musichords.R
-import com.jsdisco.musichords.data.SoundStatus
 import com.jsdisco.musichords.data.models.Interval
 import com.jsdisco.musichords.data.models.Root
 import com.jsdisco.musichords.domain.models.IntervalSolution
@@ -82,7 +81,6 @@ fun RelativePitchScreen(
         ::handleNextBtn,
         ::checkAnswer,
         ::playInterval,
-        viewModel.soundStatus.value,
         intervalStrings,
         viewModel.roots,
         textGameBtns
@@ -103,14 +101,11 @@ fun RelativePitchScreenUI(
     handleNextBtn: () -> Unit,
     checkAnswer: (Int) -> Unit,
     playInterval: (Interval) -> Unit,
-    soundStatus: SoundStatus,
     intervalStrings: Array<String>,
     roots: List<Root>,
     textGameBtns: List<String>
 ) {
 
-    val textLoading = stringResource(id = R.string.rp_loading)
-    val textLoadingError = stringResource(id = R.string.rp_loading_error)
     val textIconNoDelay = stringResource(id = R.string.rp_icon_no_delay)
     val textIconMaxDelay = stringResource(id = R.string.rp_icon_max_delay)
     val textIconPlay = stringResource(id = R.string.rp_icon_play)
@@ -124,123 +119,105 @@ fun RelativePitchScreenUI(
             .padding(top = 10.dp, bottom = 65.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (soundStatus == SoundStatus.SUCCESS) Arrangement.SpaceBetween else Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        when(soundStatus){
-            SoundStatus.LOADING -> {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(30.dp))
-                Text(
-                    text = textLoading,
-                    style = MaterialTheme.typography.h5
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_min),
+                tint = MaterialTheme.colors.onSecondary,
+                contentDescription = textIconNoDelay,
+                modifier = Modifier
+                    .width(40.dp)
+                    .alpha(0.7f)
+            )
+            Slider(
+                value = delay,
+                onValueChange = { value -> setDelay(value) },
+                modifier = Modifier.fillMaxWidth(0.7f)
+            )
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_max),
+                tint = MaterialTheme.colors.onSecondary,
+                contentDescription = textIconMaxDelay,
+                modifier = Modifier
+                    .width(40.dp)
+                    .alpha(0.7f)
+            )
+        }
+
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(verticalArrangement = Arrangement.SpaceBetween) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.play_orange),
+                    contentDescription = textIconPlay,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { handlePlayBtn() }
+                        .size(60.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Image(
+                    painter = painterResource(id = if (gameStatus == GameStatus.FOUND) R.drawable.next_orange else R.drawable.next_disabled),
+                    contentDescription = textIconNext,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(enabled = gameStatus == GameStatus.FOUND) { handleNextBtn() }
+                        .size(60.dp)
                 )
             }
-            SoundStatus.FAILURE -> {
+
+            Column {
+                val solutionString = intervalStrings[solution.interval.stringIndex]
                 Text(
-                    text = textLoadingError,
+                    text = if (gameStatus == GameStatus.FOUND) solutionString else "",
                     style = MaterialTheme.typography.h5
                 )
+                MusicSheetRP(roots, solution, gameStatus)
             }
-            SoundStatus.SUCCESS -> {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_min),
-                        tint = MaterialTheme.colors.onSecondary,
-                        contentDescription = textIconNoDelay,
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()){
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                val nestedIntervalsList = intervalsList.chunked(chunks)
+
+                for ((i, row) in nestedIntervalsList.withIndex()) {
+                    Row(
                         modifier = Modifier
-                            .width(40.dp)
-                            .alpha(0.7f)
-                    )
-                    Slider(
-                        value = delay,
-                        onValueChange = { value -> setDelay(value) },
-                        modifier = Modifier.fillMaxWidth(0.7f)
-                    )
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_max),
-                        tint = MaterialTheme.colors.onSecondary,
-                        contentDescription = textIconMaxDelay,
-                        modifier = Modifier
-                            .width(40.dp)
-                            .alpha(0.7f)
-                    )
-                }
-
-
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(verticalArrangement = Arrangement.SpaceBetween) {
-
-                        Image(
-                            painter = painterResource(id = R.drawable.play_orange),
-                            contentDescription = textIconPlay,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable { handlePlayBtn() }
-                                .size(60.dp)
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Image(
-                            painter = painterResource(id = if (gameStatus == GameStatus.FOUND) R.drawable.next_orange else R.drawable.next_disabled),
-                            contentDescription = textIconNext,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable(enabled = gameStatus == GameStatus.FOUND) { handleNextBtn() }
-                                .size(60.dp)
-                        )
-                    }
-
-                    Column {
-                        val solutionString = intervalStrings[solution.interval.stringIndex]
-                        Text(
-                            text = if (gameStatus == GameStatus.FOUND) solutionString else "",
-                            style = MaterialTheme.typography.h5
-                        )
-                        MusicSheetRP(roots, solution, gameStatus)
-                    }
-                }
-
-                Row(modifier = Modifier.fillMaxWidth()){
-
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        val nestedIntervalsList = intervalsList.chunked(chunks)
-
-                        for ((i, row) in nestedIntervalsList.withIndex()) {
-                            Row(
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        for (j in (0 until 3)) {
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .weight(1f)
+                                    .padding(horizontal = 4.dp)
                             ) {
-                                for (j in (0 until 3)) {
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(horizontal = 4.dp)
-                                    ) {
-                                        if (j < row.size) {
-                                            val interval = row[j]
-                                            val btnState = btnStates[i * chunks + j]
-                                            val btnText = textGameBtns[btnState.stringIndex]
-                                            GameButton(
-                                                btnState = btnState,
-                                                btnText = btnText,
-                                                onClick = {
-                                                    playInterval(interval)
-                                                    if (gameStatus == GameStatus.GUESS) {
-                                                        checkAnswer(interval.halfTones)
-                                                    }
-                                                }
-                                            )
+                                if (j < row.size) {
+                                    val interval = row[j]
+                                    val btnState = btnStates[i * chunks + j]
+                                    val btnText = textGameBtns[btnState.stringIndex]
+                                    GameButton(
+                                        btnState = btnState,
+                                        btnText = btnText,
+                                        onClick = {
+                                            playInterval(interval)
+                                            if (gameStatus == GameStatus.GUESS) {
+                                                checkAnswer(interval.halfTones)
+                                            }
                                         }
-                                    }
+                                    )
                                 }
                             }
                         }

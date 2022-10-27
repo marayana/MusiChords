@@ -5,11 +5,11 @@ import com.jsdisco.musichords.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class SoundApp: Application(){
+class MusiChordsApp: Application(){
     override fun onCreate() {
         super.onCreate()
         startKoin{
-            androidContext(this@SoundApp)
+            androidContext(this@MusiChordsApp)
             modules(appModule)
         }
     }

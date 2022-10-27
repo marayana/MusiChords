@@ -8,19 +8,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jsdisco.musichords.data.RelativePitchRepository
-import com.jsdisco.musichords.data.SoundStatus
 import com.jsdisco.musichords.data.SoundsRepository
 import com.jsdisco.musichords.data.local.models.SettingsRelativePitch
 import com.jsdisco.musichords.data.models.Interval
 import com.jsdisco.musichords.data.models.Sound
+import com.jsdisco.musichords.data.models.SoundResource
 import com.jsdisco.musichords.domain.models.IntervalSolution
 import com.jsdisco.musichords.presentation.chords.GameStatus
 import com.jsdisco.musichords.presentation.common.ButtonColour
 import com.jsdisco.musichords.presentation.common.ButtonState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class RelativePitchViewModel (
@@ -32,8 +29,6 @@ class RelativePitchViewModel (
     // SOUNDS
     private val _soundResources = soundsRepo.soundResources
     private val _currSoundIds = mutableListOf<Int>()
-    private var soundsLoaded = 0
-    val soundStatus = soundsRepo.soundStatus
     private var _playSoundsJob: Job? = null
 
 
@@ -60,25 +55,20 @@ class RelativePitchViewModel (
     private fun initValues(){
         viewModelScope.launch(Dispatchers.IO) {
             rpRepo.initSettingsRP()
-
-            getSettingsRP()
-
+            _settingsRP.value = getSettingsRP()
+            getActiveIntervals(_settingsRP.value)
         }
     }
 
     // SETTINGS
 
-    private fun getSettingsRP(){
-        viewModelScope.launch {
-            val settings = rpRepo.getSettingsRP()
-            _settingsRP.value = settings
-            _activeIntervals.value = getActiveIntervals(settings)
-            buttonStates = initButtonStates(_activeIntervals.value)
+    private suspend fun getSettingsRP() = withContext(viewModelScope.coroutineContext) {
+            rpRepo.getSettingsRP()
         }
-    }
 
-    private fun getActiveIntervals(settings: SettingsRelativePitch) : List<Interval> {
+    private fun getActiveIntervals(settings: SettingsRelativePitch) {
         val intervals = mutableListOf<Interval>()
+
         if (settings.interval1){
             intervals.add(allIntervals[0])
         }
@@ -115,7 +105,11 @@ class RelativePitchViewModel (
         if (settings.interval12){
             intervals.add(allIntervals[11])
         }
-        return intervals
+
+        _activeIntervals.value = intervals
+
+        buttonStates = initButtonStates(intervals)
+        createSolution()
     }
 
     fun togglePlayIntervalOnTap(){
@@ -136,6 +130,7 @@ class RelativePitchViewModel (
                 val settings = _settingsRP.value
                 settings.withCompoundIntervals = !settings.withCompoundIntervals
                 rpRepo.updateSettingsRP(settings)
+                createSolution()
             } catch(e: Exception){
                 Log.e("RelativePitchViewModel", "Error in toggleCompoundIntervals: $e")
             }
@@ -157,47 +152,47 @@ class RelativePitchViewModel (
     fun toggleActiveIntervals(interval: Interval){
         viewModelScope.launch(Dispatchers.IO){
             try {
+                val settings = _settingsRP.value
                 when (interval.halfTones) {
                     1 -> {
-                        settingsRP.value.interval1 = !settingsRP.value.interval1
+                        settings.interval1 = !settings.interval1
                     }
                     2 -> {
-                        settingsRP.value.interval2 = !settingsRP.value.interval2
+                        settings.interval2 = !settings.interval2
                     }
                     3 -> {
-                        settingsRP.value.interval3 = !settingsRP.value.interval3
+                        settings.interval3 = !settings.interval3
                     }
                     4 -> {
-                        settingsRP.value.interval4 = !settingsRP.value.interval4
+                        settings.interval4 = !settings.interval4
                     }
                     5 -> {
-                        settingsRP.value.interval5 = !settingsRP.value.interval5
+                        settings.interval5 = !settings.interval5
                     }
                     6 -> {
-                        settingsRP.value.interval6 = !settingsRP.value.interval6
+                        settings.interval6 = !settings.interval6
                     }
                     7 -> {
-                        settingsRP.value.interval7 = !settingsRP.value.interval7
+                        settings.interval7 = !settings.interval7
                     }
                     8 -> {
-                        settingsRP.value.interval8 = !settingsRP.value.interval8
+                        settings.interval8 = !settings.interval8
                     }
                     9 -> {
-                        settingsRP.value.interval9 = !settingsRP.value.interval9
+                        settings.interval9 = !settings.interval9
                     }
                     10 -> {
-                        settingsRP.value.interval10 = !settingsRP.value.interval10
+                        settings.interval10 = !settings.interval10
                     }
                     11 -> {
-                        settingsRP.value.interval11 = !settingsRP.value.interval11
+                        settings.interval11 = !settings.interval11
                     }
                     12 -> {
-                        settingsRP.value.interval12 = !settingsRP.value.interval12
+                        settings.interval12 = !settings.interval12
                     }
                 }
-                rpRepo.updateSettingsRP(settingsRP.value)
-                _activeIntervals.value = getActiveIntervals(settingsRP.value)
-                buttonStates = initButtonStates(_activeIntervals.value)
+                rpRepo.updateSettingsRP(settings)
+                getActiveIntervals(settings)
 
             } catch(e: Exception){
                 Log.e("RelativePitchViewModel", "Error in toggleActiveIntervals: $e")
@@ -207,20 +202,18 @@ class RelativePitchViewModel (
 
     fun loadSounds(context: Context){
         if (soundsRepo.sounds.isEmpty()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                soundPool.setOnLoadCompleteListener { _, _, status ->
-                    if (status == 0) {
-                        soundsLoaded++
-                    }
-                    if (status != 0){
-                        soundStatus.value = SoundStatus.FAILURE
-                        return@setOnLoadCompleteListener
-                    }
-                    if (soundsLoaded == _soundResources.size) {
-                        soundStatus.value = SoundStatus.SUCCESS
-                    }
+
+            val soundsToLoad = mutableListOf<SoundResource>()
+            _soundResources.forEach { res ->
+                if (solution.midiKeys.contains(res.midiKey)){
+                    soundsToLoad.add(0, res)
+                } else {
+                    soundsToLoad.add(res)
                 }
-                _soundResources.forEach {
+            }
+
+            viewModelScope.launch(Dispatchers.Default) {
+                soundsToLoad.forEach {
                     val soundId = soundPool.load(context, it.resId, 1)
                     soundsRepo.sounds.add(Sound(it.name, it.midiKey, it.resId, soundId))
                 }
@@ -258,7 +251,12 @@ class RelativePitchViewModel (
     }
 
     private fun createSolution(){
-        val solutionInterval = _activeIntervals.value.shuffled().last()
+        val intervals = _activeIntervals.value
+
+        var randomFirstMk: Int
+        var secondMk: Int
+
+        val solutionInterval = intervals.shuffled().last()
 
         val isCompound = if (settingsRP.value.withCompoundIntervals) {
             listOf(true, false).shuffled().last()
@@ -266,10 +264,10 @@ class RelativePitchViewModel (
             false
         }
 
-        val randomFirstMk = (0..12).shuffled().last() + soundsRepo.lowestMidiKey
-
-        val secondMk = if (isCompound) randomFirstMk + solutionInterval.halfTones + 12 else randomFirstMk + solutionInterval.halfTones
-
+        do {
+            randomFirstMk = (0..12).shuffled().last() + soundsRepo.lowestMidiKey
+            secondMk = if (isCompound) randomFirstMk + solutionInterval.halfTones + 12 else randomFirstMk + solutionInterval.halfTones
+        } while(randomFirstMk == solution.midiKeys[0] && secondMk == solution.midiKeys[1])
 
         solution = IntervalSolution(solutionInterval, isCompound, listOf(randomFirstMk, secondMk))
     }
@@ -305,10 +303,8 @@ class RelativePitchViewModel (
         if (settingsRP.value.playIntervalOnTap){
             if (solution.isCompound){
                 playSounds(getCurrSounds(listOf(solution.midiKeys[0], solution.midiKeys[0] + interval.halfTones + 12)))
-
             } else {
                 playSounds(getCurrSounds(listOf(solution.midiKeys[0], solution.midiKeys[0] + interval.halfTones)))
-
             }
         }
     }
@@ -316,7 +312,6 @@ class RelativePitchViewModel (
     fun handlePlayBtn(){
         if (gameStatus.value == GameStatus.INITIAL) {
             gameStatus.value = GameStatus.GUESS
-            createSolution()
             setButtonStates()
         }
         playSounds(getCurrSounds(solution.midiKeys))

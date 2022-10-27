@@ -21,8 +21,6 @@
         <item name="bottom_nav_chordsinfo">akkorde</item>
     </string-array>
 
-    <string name="chords_loading">sounds werden geladen…</string>
-    <string name="chords_loading_error">beim laden der sounds ist ein fehler aufgetreten</string>
     <string name="chords_icon_no_delay">kein delay</string>
     <string name="chords_icon_max_delay">maximales delay</string>
     <string name="chords_icon_play">akkord abspielen</string>
@@ -58,8 +56,6 @@
     <string name="settings_chords_new_exercise_save">übung speichern</string>
 
 
-    <string name="rp_loading">sounds werden geladen…</string>
-    <string name="rp_loading_error">beim laden der sounds ist ein fehler aufgetreten</string>
     <string name="rp_icon_no_delay">kein delay</string>
     <string name="rp_icon_max_delay">maximales delay</string>
     <string name="rp_icon_play">intervall abspielen</string>

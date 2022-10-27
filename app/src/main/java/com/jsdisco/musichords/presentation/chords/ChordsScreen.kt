@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.jsdisco.musichords.R
-import com.jsdisco.musichords.data.SoundStatus
 import com.jsdisco.musichords.data.models.Chord
 import com.jsdisco.musichords.data.models.Root
 import com.jsdisco.musichords.data.models.Scale
@@ -34,7 +33,8 @@ fun ChordsScreen(
     viewModel: ChordsViewModel
 ) {
 
-    viewModel.loadSounds(LocalContext.current)
+    val context = LocalContext.current
+    viewModel.loadSounds(context)
 
     val chunks = 3
 
@@ -82,7 +82,6 @@ fun ChordsScreen(
         ::playChord,
         viewModel.roots,
         viewModel.scales,
-        viewModel.soundStatus.value,
         noteStrings,
         chordStrings
     )
@@ -103,13 +102,10 @@ fun ChordsScreenUI(
     playChord: (Chord) -> Unit,
     roots: List<Root>,
     scales: List<Scale>,
-    soundStatus: SoundStatus,
     noteStrings: Array<String>,
     chordStrings: Array<String>
 ) {
 
-    val textLoadingSounds = stringResource(id = R.string.chords_loading)
-    val textLoadingError = stringResource(id = R.string.chords_loading_error)
     val textIconNoDelay = stringResource(id = R.string.chords_icon_no_delay)
     val textIconMaxDelay = stringResource(id = R.string.chords_icon_max_delay)
     val textIconPlay = stringResource(id = R.string.chords_icon_play)
@@ -123,122 +119,103 @@ fun ChordsScreenUI(
             .padding(top = 10.dp, bottom = 65.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = if (soundStatus == SoundStatus.SUCCESS) Arrangement.SpaceBetween else Arrangement.Center
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        when (soundStatus) {
-            SoundStatus.LOADING -> {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(30.dp))
-                Text(
-                    text = textLoadingSounds,
-                    style = MaterialTheme.typography.h5
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_min),
+                tint = MaterialTheme.colors.onSecondary,
+                contentDescription = textIconNoDelay,
+                modifier = Modifier
+                    .width(40.dp)
+                    .alpha(0.7f)
+            )
+            Slider(
+                value = delay,
+                onValueChange = { value -> setDelay(value) },
+                modifier = Modifier.fillMaxWidth(0.7f)
+            )
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_max),
+                tint = MaterialTheme.colors.onSecondary,
+                contentDescription = textIconMaxDelay,
+                modifier = Modifier
+                    .width(40.dp)
+                    .alpha(0.7f)
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(verticalArrangement = Arrangement.SpaceBetween) {
+                Image(
+                    painter = painterResource(id = R.drawable.play_pink),
+                    contentDescription = textIconPlay,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { handlePlayBtn() }
+                        .size(60.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Image(
+                    painter = painterResource(id = if (gameStatus == GameStatus.FOUND) R.drawable.next_pink else R.drawable.next_disabled),
+                    contentDescription = textIconNext,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(enabled = gameStatus == GameStatus.FOUND) { handleNextBtn() }
+                        .size(60.dp)
                 )
             }
-            SoundStatus.FAILURE -> {
+
+            Column {
+                val solutionString = "${noteStrings[solution.rootStringIndex]} ${chordStrings[solution.chordStringIndex]}"
                 Text(
-                    text = textLoadingError,
+                    text = if (gameStatus == GameStatus.FOUND) solutionString else "",
                     style = MaterialTheme.typography.h5
                 )
+                MusicSheet(roots, scales, solution, gameStatus)
             }
-            SoundStatus.SUCCESS -> {
+        }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_min),
-                        tint = MaterialTheme.colors.onSecondary,
-                        contentDescription = textIconNoDelay,
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                val nestedChordsList = chordsList.chunked(chunks)
+
+                for ((i, row) in nestedChordsList.withIndex()) {
+                    Row(
                         modifier = Modifier
-                            .width(40.dp)
-                            .alpha(0.7f)
-                    )
-                    Slider(
-                        value = delay,
-                        onValueChange = { value -> setDelay(value) },
-                        modifier = Modifier.fillMaxWidth(0.7f)
-                    )
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delay_max),
-                        tint = MaterialTheme.colors.onSecondary,
-                        contentDescription = textIconMaxDelay,
-                        modifier = Modifier
-                            .width(40.dp)
-                            .alpha(0.7f)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(verticalArrangement = Arrangement.SpaceBetween) {
-                        Image(
-                            painter = painterResource(id = R.drawable.play_pink),
-                            contentDescription = textIconPlay,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable { handlePlayBtn() }
-                                .size(60.dp)
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Image(
-                            painter = painterResource(id = if (gameStatus == GameStatus.FOUND) R.drawable.next_pink else R.drawable.next_disabled),
-                            contentDescription = textIconNext,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable(enabled = gameStatus == GameStatus.FOUND) { handleNextBtn() }
-                                .size(60.dp)
-                        )
-                    }
-
-                    Column {
-                        val solutionString = "${noteStrings[solution.rootStringIndex]} ${chordStrings[solution.chordStringIndex]}"
-                        Text(
-                            text = if (gameStatus == GameStatus.FOUND) solutionString else "",
-                            style = MaterialTheme.typography.h5
-                        )
-                        MusicSheet(roots, scales, solution, gameStatus)
-                    }
-                }
-
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-
-                        val nestedChordsList = chordsList.chunked(chunks)
-
-                        for ((i, row) in nestedChordsList.withIndex()) {
-                            Row(
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        for (j in (0 until 3)) {
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .weight(1f)
+                                    .padding(horizontal = 4.dp)
                             ) {
-                                for (j in (0 until 3)) {
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(horizontal = 4.dp)
-                                    ) {
-                                        if (j < row.size) {
-                                            val chord = row[j]
-                                            val btnState = btnStates[i * chunks + j]
-                                            val btnText = textGameBtns[btnState.stringIndex]
-                                            GameButton(
-                                                btnState = btnState,
-                                                btnText = btnText,
-                                                onClick = {
-                                                    playChord(chord)
-                                                    if (gameStatus == GameStatus.GUESS) {
-                                                        checkAnswer(chord.name)
-                                                    }
-                                                }
-                                            )
+                                if (j < row.size) {
+                                    val chord = row[j]
+                                    val btnState = btnStates[i * chunks + j]
+                                    val btnText = textGameBtns[btnState.stringIndex]
+                                    GameButton(
+                                        btnState = btnState,
+                                        btnText = btnText,
+                                        onClick = {
+                                            playChord(chord)
+                                            if (gameStatus == GameStatus.GUESS) {
+                                                checkAnswer(chord.name)
+                                            }
                                         }
-                                    }
+                                    )
                                 }
                             }
                         }

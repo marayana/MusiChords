@@ -43,7 +43,7 @@ fun GameStartScreen(
         Box(modifier = Modifier
             .width(300.dp)
             .height(120.dp)
-            .clickable { navController.navigate(GameScreen.RelativePitch.route) }
+            .clickable {navController.navigate(GameScreen.RelativePitch.route) }
             .clip(shape = RoundedCornerShape(12.dp))
             .background(
                 brush = Brush.linearGradient(

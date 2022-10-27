@@ -5,7 +5,6 @@ import android.media.SoundPool
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jsdisco.musichords.data.ChordsRepository
-import com.jsdisco.musichords.data.SoundStatus
 import com.jsdisco.musichords.data.SoundsRepository
 import com.jsdisco.musichords.data.models.Chord
 import com.jsdisco.musichords.data.models.Root
@@ -23,8 +22,6 @@ class ChordsInfoViewModel (
 ) : ViewModel(){
 
     private val _soundResources = soundsRepo.soundResources
-    private var soundsLoaded = 0
-    val soundStatus = soundsRepo.soundStatus
 
     val roots = repo.roots
     val chords = repo.chords
@@ -36,19 +33,7 @@ class ChordsInfoViewModel (
 
     fun loadSounds(context: Context){
         if (soundsRepo.sounds.isEmpty()){
-            viewModelScope.launch(Dispatchers.IO) {
-                soundPool.setOnLoadCompleteListener { _, _, status ->
-                    if (status == 0) {
-                        soundsLoaded++
-                    }
-                    if (status != 0){
-                        soundStatus.value = SoundStatus.FAILURE
-                        return@setOnLoadCompleteListener
-                    }
-                    if (soundsLoaded == _soundResources.size) {
-                        soundStatus.value = SoundStatus.SUCCESS
-                    }
-                }
+            viewModelScope.launch(Dispatchers.Default) {
                 _soundResources.forEach {
                     val soundId = soundPool.load(context, it.resId, 1)
                     soundsRepo.sounds.add(Sound(it.name, it.midiKey, it.resId, soundId))

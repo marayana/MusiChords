@@ -11,6 +11,7 @@ import com.jsdisco.musichords.data.models.Scale
 class ChordsRepository(private val database: AppDatabase) {
 
     suspend fun initSettingsChords(){
+
         if(database.appDao.getSettingsChordsCount() == 0){
             val chordSetId = database.appDao.getChordsSetsIds()[0]
             val newSetting = SettingsChords(activeChordSetId = chordSetId)
