@@ -265,7 +265,7 @@ class RelativePitchViewModel (
         }
 
         do {
-            randomFirstMk = (0..12).shuffled().last() + soundsRepo.lowestMidiKey
+            randomFirstMk = (0..12).shuffled().last() + soundsRepo.lowestMidiKey + 12
             secondMk = if (isCompound) randomFirstMk + solutionInterval.halfTones + 12 else randomFirstMk + solutionInterval.halfTones
         } while(randomFirstMk == solution.midiKeys[0] && secondMk == solution.midiKeys[1])
 
@@ -341,6 +341,7 @@ class RelativePitchViewModel (
     fun reset(){
         gameStatus.value = GameStatus.INITIAL
         _currSoundIds.clear()
+        createSolution()
         setButtonStates()
     }
 

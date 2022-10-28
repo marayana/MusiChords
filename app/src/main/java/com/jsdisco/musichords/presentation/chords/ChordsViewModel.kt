@@ -399,6 +399,7 @@ class ChordsViewModel(
     fun reset() {
         gameStatus.value = GameStatus.INITIAL
         _currSoundIds.clear()
+        createSolution()
         setButtonStates()
     }
 

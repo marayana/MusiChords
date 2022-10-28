@@ -18,7 +18,7 @@
 
     <string-array name="bottom_nav">
         <item name="bottom_nav_games">training</item>
-        <item name="bottom_nav_chordsinfo">akkorde</item>
+        <item name="bottom_nav_chordsinfo">akkord-lexikon</item>
     </string-array>
 
     <string name="chords_icon_no_delay">kein delay</string>

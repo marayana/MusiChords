@@ -17,7 +17,7 @@
 
     <string-array name="bottom_nav">
         <item name="bottom_nav_games">training</item>
-        <item name="bottom_nav_chordsinfo">chords</item>
+        <item name="bottom_nav_chordsinfo">chords info</item>
     </string-array>
 
     <string name="chords_icon_no_delay">no delay</string>

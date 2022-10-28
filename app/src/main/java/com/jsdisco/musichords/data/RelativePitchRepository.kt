@@ -5,13 +5,13 @@ import com.jsdisco.musichords.data.local.models.SettingsRelativePitch
 import com.jsdisco.musichords.data.models.Interval
 import com.jsdisco.musichords.data.models.Quality
 import com.jsdisco.musichords.data.models.Root
+import kotlinx.coroutines.delay
 
 class RelativePitchRepository(private val database: AppDatabase) {
 
     suspend fun initSettingsRP(){
         if (database.appDao.getSettingsRPCount() == 0){
-            val settingsRP = SettingsRelativePitch()
-            database.appDao.insertSettingsRP(settingsRP)
+            database.appDao.insertSettingsRP(SettingsRelativePitch())
         }
     }
 
