@@ -11,6 +11,7 @@
     <string name="title_settings_relative_pitch">relatives gehör - einstellungen</string>
     <string name="title_settings_chords_create_exercise">neue übung erstellen</string>
     <string name="title_settings_chords_exercises">akkorde - übungen</string>
+    <string name="title_about">über diese app</string>
 
     <string name="top_bar_icon_back">zurück</string>
     <string name="top_bar_icon_settings">gehe zu einstellungen</string>
@@ -19,6 +20,7 @@
     <string-array name="bottom_nav">
         <item name="bottom_nav_games">training</item>
         <item name="bottom_nav_chordsinfo">akkord-lexikon</item>
+        <item name="bottom_nav_about">info</item>
     </string-array>
 
     <string name="chords_icon_no_delay">kein delay</string>
@@ -215,49 +217,15 @@
         <item name="add9">add9</item>
         <item name="madd9">madd9</item>
     </string-array>
-<!--
-    <string name="s5">5</string>
-    <string name="6">6</string>
-    <string name="7">7</string>
-    <string name="9">9</string>
-    <string name="11">11</string>
-    <string name="13">13</string>
-    <string name="69">69</string>
-    <string name="major">dur</string>
-    <string name="m">moll</string>
-    <string name="dim">dim</string>
-    <string name="dim7">dim7</string>
-    <string name="sus2">sus2</string>
-    <string name="sus4">sus4</string>
-    <string name="7sus4">7sus4</string>
-    <string name="aug">aug</string>
-    <string name="7b5">7b5</string>
-    <string name="aug7">aug7</string>
-    <string name="9b5">9b5</string>
-    <string name="aug9">aug9</string>
-    <string name="7b9">7b5</string>
-    <string name="7sharp9">7#9</string>
-    <string name="7b5b9">7b5b9</string>
-    <string name="7sharp5b9">7#5b9</string>
-    <string name="7b5sharp9">7b5#9</string>
-    <string name="7sharp5sharp9">7#5#9</string>
-    <string name="9sharp11">9#11</string>
-    <string name="maj7">maj7</string>
-    <string name="maj7b5">maj7b5</string>
-    <string name="maj7sharp5">maj7#5</string>
-    <string name="maj9">maj9</string>
-    <string name="maj11">maj11</string>
-    <string name="maj13">maj13</string>
-    <string name="m6">m6</string>
-    <string name="m69">m69</string>
-    <string name="m7">m7</string>
-    <string name="m7b5">m7b5</string>
-    <string name="m9">m9</string>
-    <string name="m11">m11</string>
-    <string name="mmaj7">mmaj7</string>
-    <string name="mmaj7b5">mmaj7b5</string>
-    <string name="mmaj9">mmaj9</string>
-    <string name="mmaj11">mmaj11</string>
-    <string name="add9">add9</string>
-    <string name="madd9">madd9</string>-->
+
+
+    <string name="about_1">MusiChords ist zwei apps in einer:</string>
+    <string name="about_2">gehörtraining</string>
+    <string name="about_3">die fähigkeit, intervalle und akkorde korrekt zu identifizieren ist essentiell für musiker, und MusiChords ist eine unterhaltsame und leicht zu benutzende app, um deine ohren systematisch zu trainieren.</string>
+    <string name="about_4">du erhältst keine mitteilungen, um dich an dein tägliches training zu erinnern, benutze die app einfach nach deinem belieben, immer wenn du ein paar freie minuten hast.</string>
+    <string name="about_5">du kannst die übungen ganz nach deinen wünschen anpassen und auch eigene übungen erstellen, um für dich das meiste aus deinem training herauszuholen.</string>
+    <string name="about_6">akkord-lexikon</string>
+    <string name="about_7">wenn du einen bestimmten akkord nachschlagen willst, kannst du den grundton und den akkordnamen aus einem aufklappmenü auswählen. das lexikon listet dir die entsprechenden noten, halbtöne/intervalle und midikeys auf, und zeigt dir den akkord auf einer klaviertastatur.</string>
+    <string name="about_8">datenschutzerklärung</string>
+    <string name="about_link_privacy_policy">link zur datenschutzerklärung dieser app (öffnet sich im internetbrowser)</string>
 </resources>

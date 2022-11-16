@@ -3,6 +3,7 @@ package com.jsdisco.musichords.presentation.common.navigation
 sealed class Screen(val route: String){
     object Game: Screen("games")
     object ChordsInfo: Screen("chordsinfo")
+    object About: Screen("about")
 }
 
 sealed class GameScreen(val route: String){

@@ -20,7 +20,8 @@ val Typography = Typography(
     body1 = TextStyle( // all text fields
         fontFamily = fonts,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        lineHeight = 30.sp
     ),
     body2 = TextStyle(
         fontFamily = fonts,
@@ -36,6 +37,11 @@ val Typography = Typography(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp
+    ),
+    h2 = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp
     ),
     h5 = TextStyle(
         fontFamily = fonts,

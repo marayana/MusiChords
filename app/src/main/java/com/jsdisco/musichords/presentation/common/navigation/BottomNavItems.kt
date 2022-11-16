@@ -2,6 +2,7 @@ package com.jsdisco.musichords.presentation.common.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Hearing
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Piano
 
 object BottomNavItems {
@@ -23,6 +24,11 @@ object BottomNavItems {
             label = "chords",
             icon = Icons.Rounded.Piano,
             routes = listOf(Screen.ChordsInfo.route)
+        ),
+        BottomNavItem(
+            label = "about",
+            icon = Icons.Rounded.Info,
+            routes = listOf(Screen.About.route)
         )
     )
 }

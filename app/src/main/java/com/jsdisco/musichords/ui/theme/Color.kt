@@ -14,6 +14,7 @@ val Red = Color(0xFFDD6363)
 
 val Blue = Color(0xFF3A629C)
 val BlueLight = Color(0xFF92AED6)
+val BlueUI = Color(0xFF5978A5)
 val BlueLink = Color(0xFF7799bb)
 
 val Transparent = Color(0x00000000)

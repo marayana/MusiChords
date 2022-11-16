@@ -10,6 +10,7 @@
     <string name="title_settings_relative_pitch">relative pitch settings</string>
     <string name="title_settings_chords_create_exercise">create new exercise</string>
     <string name="title_settings_chords_exercises">chords exercises</string>
+    <string name="title_about">about this app</string>
 
     <string name="top_bar_icon_back">go back</string>
     <string name="top_bar_icon_settings">open settings</string>
@@ -18,6 +19,7 @@
     <string-array name="bottom_nav">
         <item name="bottom_nav_games">training</item>
         <item name="bottom_nav_chordsinfo">chords info</item>
+        <item name="bottom_nav_about">about</item>
     </string-array>
 
     <string name="chords_icon_no_delay">no delay</string>
@@ -217,5 +219,16 @@
         <item name="add9">add9</item>
         <item name="madd9">madd9</item>
     </string-array>
+
+
+    <string name="about_1">MusiChords is two apps in one:</string>
+    <string name="about_2">musical ear training</string>
+    <string name="about_3">the ability to identify intervals and chords by ear is an essential skill for every musician, and MusiChords offers you a fun and easy-to-use tool for training your ears.</string>
+    <string name="about_4">it doesn\'t send you notifications to remind you of your daily training, it is meant to be used at your pleasure, whenever you have some spare time.</string>
+    <string name="about_5">you can customise and create your own exercises, to fit exactly your needs and to get the most out of your training.</string>
+    <string name="about_6">chord dictionary</string>
+    <string name="about_7">whenever you need a quick refresher for a certain chord, you can select the root note and chord name from a dropdown menu, and the dictionary will give you a list of notes, a list of halftones/intervals, a list of midi keys, and will show you a visual representation of the chord on a piano keyboard.</string>
+    <string name="about_8">privacy policy</string>
+    <string name="about_link_privacy_policy">link to this app\'s privacy policy (opens in your web browser)</string>
 
 </resources>

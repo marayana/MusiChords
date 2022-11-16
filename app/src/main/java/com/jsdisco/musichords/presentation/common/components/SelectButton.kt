@@ -38,6 +38,7 @@ fun SelectButton(
             text = text,
             color = MaterialTheme.colors.onSecondary,
             textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .padding(horizontal = 6.dp)
                 .align(Alignment.Center)

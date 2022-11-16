@@ -34,6 +34,7 @@ import com.jsdisco.musichords.presentation.settings_chords_exercises.SettingsCho
 import com.jsdisco.musichords.presentation.settings_relative_pitch.SettingsRelativePitchScreen
 import com.jsdisco.musichords.ui.theme.MusiChordsTheme
 import com.jsdisco.musichords.R
+import com.jsdisco.musichords.presentation.about.AboutScreen
 import org.koin.androidx.compose.getViewModel
 
 
@@ -193,6 +194,13 @@ class MainActivity : ComponentActivity() {
                         composable(route = Screen.ChordsInfo.route){
                             ChordsInfoScreen(
                                 viewModel = chordsInfoViewModel,
+                                onSetAppBarTitle = {appBarTitle = it},
+                                onSetShowBackBtn = {showBackBtn = it}
+                            )
+                        }
+
+                        composable(route = Screen.About.route){
+                            AboutScreen(
                                 onSetAppBarTitle = {appBarTitle = it},
                                 onSetShowBackBtn = {showBackBtn = it}
                             )
